@@ -1,0 +1,19 @@
+{
+    "manifest_version": 3,
+    "name": "cute_cat",
+    "version": "0.1",
+    "permissions": [
+        "activeTab","storage", "scripting"
+      ],
+    "content_scripts": [{
+        "matches": ["<all_urls>"],
+        "js": ["index.js"]
+    }],
+    "action": {
+      "default_popup": "popup.html"
+    },
+    "web_accessible_resources": [{
+      "resources": ["images/*"],
+      "matches": ["<all_urls>"]
+    }]
+}
