@@ -4,7 +4,7 @@
     "description": "Here is your cute cat. Be happy!",
     "version": "0.1.2",
     "permissions": [
-        "activeTab","storage", "scripting"
+        "storage"
       ],
     "content_scripts": [{
         "matches": ["<all_urls>"],
