@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Cute Cat",
-    "description": "Healing with your cute cat",
+    "description": "Here is your cute cat. Be happy!",
     "version": "0.12",
     "permissions": [
         "activeTab","storage", "scripting"
