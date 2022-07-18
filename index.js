@@ -1,24 +1,23 @@
-const idleImageUrl = chrome.runtime.getURL('/images/cat_idle_1.png');
-const clickedImageUrl = chrome.runtime.getURL('/images/cat_clicked_1.png')
+const defaultIdleImageUrl = chrome.runtime.getURL('/images/cat_idle_1.png');
+const defaultClickedImageUrl = chrome.runtime.getURL('/images/cat_clicked_1.png')
 
-function changeImage(){
-    image.setAttribute('src',clickedImageUrl);
-}
+const showClickedImage = () => {
+    chrome.storage.sync.get('clickedImage', (result) => {
+        console.log({result});
+        cat.setAttribute('src',result['clickedImage'] ?? defaultClickedImageUrl);
+    });}
 
-var image = document.createElement('img');
-image.style.position = 'fixed';
-image.style.bottom = '0px';
-image.style.right = '100px';
-image.setAttribute('alt','image');
-image.onclick = changeImage;
+var cat = document.createElement('img');
+cat.style.position = 'fixed';
+cat.style.bottom = '0px';
+cat.style.right = '100px';
+cat.setAttribute('alt','cat');
+cat.onclick = showClickedImage;
+cat.ondrag
 
-chrome.storage.sync.get('image', (result) => {
-    console.log({resultValue: result});
-    if(result['image'] !== undefined){
-        image.setAttribute('src',result['image'])
-    }else{
-        image.setAttribute('src',idleImageUrl);
-    }
-  });
+chrome.storage.sync.get('idleImage', (result) => {
+    console.log({result});
+    cat.setAttribute('src',result['idleImage'] ?? defaultIdleImageUrl);
+});
 
-document.body.appendChild(image);
+document.body.appendChild(cat);

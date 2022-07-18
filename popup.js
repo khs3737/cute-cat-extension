@@ -1,7 +1,15 @@
-const imageInput = document.getElementById("imageUpload");
+const idleImageInput = document.getElementById("idleImageUpload");
+const clickedImageInput = document.getElementById("clickedImageUpload");
+const imagesResetButton = document.getElementById("imagesResetButton");
 
-imageInput.onchange = () => {
-    chrome.storage.sync.set({'image': imageInput.value});
+idleImageInput.onchange = () => {
+    chrome.storage.sync.set({'idleImage': idleImageInput.value});
 };
 
-document.getElementById('imageSaveButton').onclick = saveImage;
+clickedImageInput.onchange = () => {
+    chrome.storage.sync.set({'clickedImage': clickedImageInput.value});
+};
+
+imagesResetButton.onclick = () => {
+    chrome.storage.sync.remove(['idleImage','clickedImage']);
+}
