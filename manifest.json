@@ -1,7 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "cute_cat",
-    "version": "0.11",
+    "name": "Cute Cat",
+    "description": "Healing with cute cat",
+    "version": "0.12",
     "permissions": [
         "activeTab","storage", "scripting"
       ],
@@ -10,10 +11,22 @@
         "js": ["index.js"]
     }],
     "action": {
-      "default_popup": "popup.html"
+      "default_popup": "popup.html",
+      "default_icon": {
+        "16": "icons/icon16.png",
+        "32": "icons/icon32.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png" 
+      }
     },
     "web_accessible_resources": [{
       "resources": ["images/*"],
       "matches": ["<all_urls>"]
-    }]
+    }],
+    "icons": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png" 
+    }
 }
