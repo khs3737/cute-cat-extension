@@ -1,5 +1,19 @@
-const defaultIdleImageUrl = chrome.runtime.getURL('/images/cat_idle_1.png');
-const defaultClickedImageUrl = chrome.runtime.getURL('/images/cat_clicked_1.png')
+let randCatImage = Math.floor(Math.random() * 100);
+
+let defaultIdleImageUrl = null;
+let defaultClickedImageUrl = null;
+
+if(randCatImage <80){
+    defaultIdleImageUrl = chrome.runtime.getURL('/images/cat_idle_1.png');
+    defaultClickedImageUrl = chrome.runtime.getURL('/images/cat_clicked_1.png');
+} else if(randCatImage <90){
+    defaultIdleImageUrl = chrome.runtime.getURL('/images/cat_idle_2.png');
+    defaultClickedImageUrl = chrome.runtime.getURL('/images/cat_clicked_2.png');
+}else{
+    defaultIdleImageUrl = chrome.runtime.getURL('/images/cat_idle_3.png');
+    defaultClickedImageUrl = chrome.runtime.getURL('/images/cat_clicked_3.png');
+}
+
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
