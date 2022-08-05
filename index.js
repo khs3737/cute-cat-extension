@@ -1,23 +1,26 @@
-let randCatImage = Math.floor(Math.random() * 100);
+let isCatShow;
 
-let defaultIdleImageUrl = null;
-let defaultClickedImageUrl = null;
+const init = () => {
+    chrome.storage.local.get({ isCatShow : true }, ({ isCatShow }) => {
+        this.isCatShow = isCatShow;
+        makeCat({imageNum: 1, size: 128, left: window.innerWidth - 250, zIndex: 10000});
+    });
+};
 
-if(randCatImage <80){
-    defaultIdleImageUrl = chrome.runtime.getURL('/images/cat_idle_1.png');
-    defaultClickedImageUrl = chrome.runtime.getURL('/images/cat_clicked_1.png');
-} else if(randCatImage <90){
-    defaultIdleImageUrl = chrome.runtime.getURL('/images/cat_idle_2.png');
-    defaultClickedImageUrl = chrome.runtime.getURL('/images/cat_clicked_2.png');
-}else{
-    defaultIdleImageUrl = chrome.runtime.getURL('/images/cat_idle_3.png');
-    defaultClickedImageUrl = chrome.runtime.getURL('/images/cat_clicked_3.png');
-}
+let toggleCatEvent = new Event('toggleCatEvent');
 
+chrome.storage.onChanged.addListener((changes) => {
+    for (let [key, { newValue }] of Object.entries(changes)) {
+      if(key === 'isCatShow'){
+        isCatShow = newValue;
+        document.dispatchEvent(toggleCatEvent);
+      }
+    }
+  });
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-const makeCat = ({imageNum, size, left, zIndex}) =>{
+const makeCat = async ({imageNum, size, left, zIndex}) =>{
 
     const idleImageUrl = chrome.runtime.getURL(`/images/cat_idle_${imageNum}.png`);
 
@@ -34,11 +37,15 @@ const makeCat = ({imageNum, size, left, zIndex}) =>{
     cat.src = idleImageUrl;
     cat.alt = 'cat';
 
+    cat.style.opacity = this.isCatShow ? 1 : 0; 
+
+    document.addEventListener('toggleCatEvent', () => {cat.style.opacity = isCatShow ? 1 : 0 });
+
     // Click event
 
     let isClicked = false;
 
-    cat.onclick = async (image) => {
+    cat.onclick = async () => {
         if(!isClicked){
             cat.src = clickedImageUrl;
             isClicked = true;
@@ -91,4 +98,4 @@ const makeCat = ({imageNum, size, left, zIndex}) =>{
     document.body.appendChild(cat);
 };
 
-makeCat({imageNum: 1, size: 128, left: window.innerWidth - 250, zIndex: 10000});
+init();
