@@ -17,54 +17,78 @@ if(randCatImage <80){
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-let isClicked = false;
+const makeCat = ({imageNum, size, left, zIndex}) =>{
 
-const onClickCat = async () => {
-    if(!isClicked){
-        cat.src = defaultClickedImageUrl;
-        isClicked = true;
-        sleep(1500).then(() => {
-            cat.src = defaultIdleImageUrl;
-            isClicked = false;
-        });
-    }  
-};
+    const idleImageUrl = chrome.runtime.getURL(`/images/cat_idle_${imageNum}.png`);
 
-const onDragCat = (event) => {
-    let shiftX = event.clientX - cat.getBoundingClientRect().right;
-    let shiftY = event.clientY - cat.getBoundingClientRect().bottom;
-    cat.style.position = 'absolute';
-    cat.style.right = window.innerWidth - event.pageX + shiftX + 'px';
-    cat.style.bottom = window.innerHeight - event.pageY + shiftY + 'px';
-    const onMouseMove = (event) => {
-        cat.style.position = 'absolute';
-        cat.style.right = window.innerWidth - event.pageX + shiftX + 'px';
-        cat.style.bottom = window.innerHeight - event.pageY + shiftY + 'px';
+    const clickedImageUrl = chrome.runtime.getURL(`/images/cat_clicked_${imageNum}.png`);
+
+    let cat = document.createElement('img');
+
+    cat.style.position = 'fixed';
+    cat.style.bottom = '0px';
+    cat.style.width = `${size}px`;
+    cat.style.height = `${size}px`;
+    cat.style.left = `${left}px`;
+    cat.style.zIndex = `${zIndex}`;
+    cat.src = idleImageUrl;
+    cat.alt = 'cat';
+
+    // Click event
+
+    let isClicked = false;
+
+    cat.onclick = async (image) => {
+        if(!isClicked){
+            cat.src = clickedImageUrl;
+            isClicked = true;
+            sleep(1500).then(() => {
+                cat.src = idleImageUrl;
+                isClicked = false;
+            });
+        }
     };
 
-    document.addEventListener('mousemove', onMouseMove);
+    // Double Click event
 
-    cat.onmouseup = (event) => {
-        document.removeEventListener('mousemove', onMouseMove);
-        cat.style.position = 'fixed';
-        cat.style.bottom = '0px';
-        cat.style.right = window.innerWidth - event.pageX;
+    cat.ondblclick = async () => {
+        makeCat({
+            imageNum: Math.floor(Math.random() * 3) + 1,
+            size: Math.max( Math.floor(Math.random() * size / 2 + size / 3), 16),
+            left: Math.floor(Math.random() * window.innerWidth - size * 2) + size,
+            zIndex: zIndex + 1
+        });
     }
+
+    // Drag event
+
+    cat.draggable = true;
+    cat.ondragstart = () => false;
+
+    cat.onmousedown = (event) => {
+        let shiftX = event.clientX - cat.getBoundingClientRect().left;
+        let shiftY = event.clientY - cat.getBoundingClientRect().bottom;
+        
+        cat.style.position = 'absolute';
+        cat.style.left = event.pageX - shiftX + 'px';
+        cat.style.bottom = window.innerHeight - event.pageY + shiftY + 'px';
+
+        document.onmousemove = (event) => {
+            cat.style.position = 'absolute';
+            cat.style.left = event.pageX - shiftX + 'px';
+            cat.style.bottom = window.innerHeight - event.pageY + shiftY + 'px';
+        };
+    
+        document.onmouseup = (event) => {
+            document.onmousemove = null;
+            document.onmouseup = null;
+            cat.style.position = 'fixed';
+            cat.style.bottom = '0px';
+            cat.style.left = Math.min( Math.max(0, event.pageX - shiftX), window.innerWidth - size ) + 'px';
+        }
+    };
+
+    document.body.appendChild(cat);
 };
 
-let cat = document.createElement('img');
-
-cat.style.position = 'fixed';
-cat.style.bottom = '0px';
-cat.style.right = '100px';
-cat.style.zIndex = '10000';
-cat.src = defaultIdleImageUrl;
-cat.alt = 'cat';
-
-cat.onclick = onClickCat;
-
-cat.draggable = true;
-cat.onmousedown = onDragCat;
-cat.ondragstart = () => false;
-
-document.body.appendChild(cat);
+makeCat({imageNum: 1, size: 128, left: window.innerWidth - 250, zIndex: 10000});

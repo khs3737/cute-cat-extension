@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Cute Cat",
     "description": "Here is your cute cat. Be happy!",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "content_scripts": [{
         "matches": ["<all_urls>"],
         "js": ["index.js"]
