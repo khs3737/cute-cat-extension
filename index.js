@@ -49,9 +49,9 @@ const makeCat = ({imageNum, size, left, zIndex}) => {
     cat.src = idleImageUrl;
     cat.alt = 'cat';
 
-    cat.style.opacity = this.isCatShow ? 1 : 0; 
+    cat.hidden = !this.isCatShow; 
 
-    document.addEventListener('toggleCatEvent', () => {cat.style.opacity = isCatShow ? 1 : 0 });
+    document.addEventListener('toggleCatEvent', () => { cat.hidden = !isCatShow });
 
     // Click event
 
@@ -127,9 +127,9 @@ const makeFish = ({size, left, zIndex}) => {
     fish.src = imageUrl;
     fish.alt = 'fish';
 
-    fish.style.opacity = this.isCatShow ? 1 : 0; 
+    fish.hidden = !this.isCatShow;
 
-    document.addEventListener('toggleCatEvent', () => {fish.style.opacity = isCatShow ? 1 : 0 });
+    document.addEventListener('toggleCatEvent', () => {fish.hidden = !isCatShow });
 
     // Drag event
 
