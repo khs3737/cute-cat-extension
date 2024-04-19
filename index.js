@@ -3,7 +3,7 @@ let isCatShow;
 const init = () => {
     chrome.storage.local.get({ isCatShow : true }, ({ isCatShow }) => {
         this.isCatShow = isCatShow;
-        makeCat({imageNum: 1, size: 128, left: window.innerWidth - 250, zIndex: 10000});
+        makeCat({imageNum: 1, size: 128, left: window.innerWidth - 250, zIndex: 1000000000});
     });
 };
 
@@ -21,7 +21,7 @@ chrome.storage.onChanged.addListener((changes) => {
         makeFish({
             size,
             left: Math.floor(Math.random() * window.innerWidth - size * 2) + size,
-            zIndex: 11000
+            zIndex: 1100000000
         });
       }
     }
