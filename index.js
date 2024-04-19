@@ -86,26 +86,22 @@ const makeCat = ({imageNum, size, left, zIndex}) => {
     cat.ondragstart = () => false;
 
     cat.onmousedown = (event) => {
-        let shiftX = event.clientX - cat.getBoundingClientRect().left;
-        let shiftY = event.clientY - cat.getBoundingClientRect().bottom;
+        const offsetX = event.clientX - cat.getBoundingClientRect().left;
+        const offsetY = event.clientY - cat.getBoundingClientRect().top;
         
-        cat.style.position = 'absolute';
-        cat.style.left = event.pageX - shiftX + 'px';
-        cat.style.bottom = window.innerHeight - event.pageY + shiftY + 'px';
-
-        document.onmousemove = (event) => {
-            cat.style.position = 'absolute';
-            cat.style.left = event.pageX - shiftX + 'px';
-            cat.style.bottom = window.innerHeight - event.pageY + shiftY + 'px';
+        const mouseMoveEvent = (event) => {
+            cat.style.left = event.clientX - offsetX + 'px';
+            cat.style.top = event.clientY - offsetY + 'px';
         };
-    
-        document.onmouseup = (event) => {
-            document.onmousemove = null;
-            document.onmouseup = null;
-            cat.style.position = 'fixed';
-            cat.style.bottom = '0px';
-            cat.style.left = Math.min( Math.max(0, event.pageX - shiftX), window.innerWidth - size ) + 'px';
+
+        const mouseUpEvent = () => {
+            cat.style.top = null;
+            document.removeEventListener("mousemove", mouseMoveEvent);
+            document.removeEventListener("mouseup", mouseUpEvent);
         }
+
+        document.addEventListener("mousemove", mouseMoveEvent);
+        document.addEventListener("mouseup", mouseUpEvent);
     };
 
     document.body.appendChild(cat);
@@ -134,23 +130,18 @@ const makeFish = ({size, left, zIndex}) => {
     // Drag event
 
     fish.draggable = true;
-    fish.ondragstart = (e) => e.preventDefault();
+    fish.ondragstart = () => false;
 
     fish.onmousedown = (event) => {
-        let shiftX = event.clientX - fish.getBoundingClientRect().left;
-        let shiftY = event.clientY - fish.getBoundingClientRect().bottom;
+        const offsetX = event.clientX - fish.getBoundingClientRect().left;
+        const offsetY = event.clientY - fish.getBoundingClientRect().top;
         
-        fish.style.position = 'absolute';
-        fish.style.left = event.pageX - shiftX + 'px';
-        fish.style.bottom = window.innerHeight - event.pageY + shiftY + 'px';
-
-        document.onmousemove = (event) => {
-            fish.style.position = 'absolute';
-            fish.style.left = event.pageX - shiftX + 'px';
-            fish.style.bottom = window.innerHeight - event.pageY + shiftY + 'px';
+        const mouseMoveEvent = (event) => {
+            fish.style.left = event.clientX - offsetX + 'px';
+            fish.style.top = event.clientY - offsetY + 'px';
         };
     
-        document.onmouseup = (event) => {
+        const mouseUpEvent = (event) => {
             fish.hidden = true;
             let target = document.elementFromPoint(event.clientX, event.clientY);
             fish.hidden = false;
@@ -159,15 +150,18 @@ const makeFish = ({size, left, zIndex}) => {
                 target.style.width = target.getBoundingClientRect().width * 1.2 + 'px';
                 target.style.height = target.getBoundingClientRect().height * 1.2 + 'px';
                 target.click();
+                document.removeEventListener("mousemove", mouseMoveEvent);
+                document.removeEventListener("mouseup", mouseUpEvent);
                 fish.remove();
             }
 
-            document.onmousemove = null;
-            document.onmouseup = null;
-            fish.style.position = 'fixed';
-            fish.style.bottom = '0px';
-            fish.style.left = Math.min( Math.max(0, event.pageX - shiftX), window.innerWidth - size ) + 'px';
+            fish.style.top = null;
+            document.removeEventListener("mousemove", mouseMoveEvent);
+            document.removeEventListener("mouseup", mouseUpEvent);
         }
+
+        document.addEventListener("mousemove", mouseMoveEvent);
+        document.addEventListener("mouseup", mouseUpEvent);
     };
 
     document.body.appendChild(fish);
