@@ -53,6 +53,18 @@ const makeCat = ({imageNum, size, left, zIndex}) => {
 
     document.addEventListener('toggleCatEvent', () => { cat.hidden = !isCatShow });
 
+    window.addEventListener('resize', () => {
+        curSize = cat.getBoundingClientRect().width;
+
+        if(parseInt(cat.style.left) < -curSize * 3 / 4 || parseInt(cat.style.left) + curSize / 2 > window.innerWidth){
+            if(curSize > window.innerWidth){
+                cat.style.left = -curSize / 2 + 'px';
+                return;
+            }
+            cat.style.left = Math.floor(Math.random() * window.innerWidth) + 'px';
+        }
+    })
+
     // Click event
 
     let isClicked = false;
@@ -88,7 +100,7 @@ const makeCat = ({imageNum, size, left, zIndex}) => {
     cat.onmousedown = (event) => {
         const offsetX = event.clientX - cat.getBoundingClientRect().left;
         const offsetY = event.clientY - cat.getBoundingClientRect().top;
-        
+
         const mouseMoveEvent = (event) => {
             cat.style.left = event.clientX - offsetX + 'px';
             cat.style.top = event.clientY - offsetY + 'px';
@@ -135,7 +147,7 @@ const makeFish = ({size, left, zIndex}) => {
     fish.onmousedown = (event) => {
         const offsetX = event.clientX - fish.getBoundingClientRect().left;
         const offsetY = event.clientY - fish.getBoundingClientRect().top;
-        
+
         const mouseMoveEvent = (event) => {
             fish.style.left = event.clientX - offsetX + 'px';
             fish.style.top = event.clientY - offsetY + 'px';
